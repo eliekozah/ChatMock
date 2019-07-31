@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_chatItem"
+    android:layout_width="match_parent"
+    android:layout_height="90dp"
+    android:background="@color/app_background"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_chatRoom_profile"
+        android:layout_width="@dimen/iv_profile_dimensions"
+        android:layout_height="@dimen/iv_profile_dimensions"
+        android:layout_marginStart="@dimen/margin_normal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/civ_chatRoom_profile"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/img_unknown_user"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/tv_chatRoom_chatUsers"
+        tools:text="Elie Kozah"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_large"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:layout_marginStart="@dimen/margin_normal"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintStart_toEndOf="@+id/cl_chatRoom_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/tv_chatRoom_chatLastMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="Last Chat Message"
+        android:textSize="@dimen/text_size_small"
+        android:textColor="@color/gray"
+        android:maxLines="1"
+        android:layout_marginStart="@dimen/margin_normal"
+        app:layout_constraintTop_toBottomOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cl_chatRoom_profile"
+        />
+
+
+    <TextView
+        android:id="@+id/tv_chatRoom_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_small"
+        android:maxLines="1"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="2 days ago" />
+    <TextView
+        android:id="@+id/tv_chatRoom_badgeValue"
+        tools:text="1000"
+        android:maxLines="1"
+        android:background="@drawable/circle_badge_notification"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:layout_margin="@dimen/margin_normal"
+        android:textSize="@dimen/tv_home_badge_text_size"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/line_dashed_gray"/>
+
+</android.support.constraint.ConstraintLayout>
