@@ -1,5 +1,8 @@
 package com.ekozah.chatmock.db;
 
+/**
+ * this class contains the chat database tables design as table creation commands
+ */
 public class DBConstant {
     public static final String TABLE_CHAT_USERS = "tbl_chat_users";
     public static final String TABLE_CHAT_ROOMS = "tbl_chat_rooms";

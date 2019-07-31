@@ -15,7 +15,10 @@ import com.ekozah.chatmock.ChatManager;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * this is the adapter class that fills all chat rooms data
+ * to the chat list ui
+ */
 public class ChatAdapter extends BaseAdapter {
 
     List<ChatMessage> messages = new ArrayList<ChatMessage>();

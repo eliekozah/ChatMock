@@ -21,6 +21,10 @@ import com.ekozah.chatmock.utils.TimeUtils;
 
 import java.util.ArrayList;
 
+/**
+ * this is the adapter class that fills all messages belonging
+ * to a single chat in the single chat list view
+ */
 public class ChatListAdapter extends Adapter<ChatListAdapter.ViewHolder>{
 
     ArrayList<ChatRoom> simpleData;

@@ -4,12 +4,18 @@ import com.ekozah.chatmock.utils.TimeUtils;
 
 import java.util.Date;
 
+/**
+ * this class contains the data of a chat message
+ * room id the message belong to
+ * user id of the person who sent the message
+ * message text
+ * and message date (date and time)
+ */
 public class ChatMessage {
-    long roomID;
-    long userID;
-    String text;
-    Date time;
-    ChatUser chatFriend;
+    private long roomID;
+    private long userID;
+    private String text;
+    private Date time;
 
     public ChatMessage() {
         roomID = -1;
@@ -56,16 +62,4 @@ public class ChatMessage {
     public void setTime(Date time) {
         this.time = time;
     }
-
-/*
-
-    public void setIsLocal(boolean isLocal) {
-        this.isLocal = isLocal;
-    }*/
-
-
-    public ChatUser getChatFriend() {
-        return chatFriend;
-    }
-
 }

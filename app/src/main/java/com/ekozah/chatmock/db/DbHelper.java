@@ -9,11 +9,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.ekozah.chatmock.data.ChatMessage;
 import com.ekozah.chatmock.data.ChatRoom;
 import com.ekozah.chatmock.data.ChatUser;
-
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * this class handles all the chat database operations:
+ * getting chat rooms, chat messages and chat chat users to
+ * to fill the chat room list data object in the chat manager
+ * as well as saving all the data, saving new messages and
+ * new message count in a certain chat room
+ */
 public class DbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.

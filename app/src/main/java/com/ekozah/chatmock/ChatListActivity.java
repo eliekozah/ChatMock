@@ -1,33 +1,21 @@
 package com.ekozah.chatmock;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.ekozah.chatmock.comparators.ChatDateComparator;
 import com.ekozah.chatmock.db.DbHelper;
-import com.ekozah.chatmock.interfaces.CallbackWithValue;
 import com.ekozah.chatmock.adapters.ChatListAdapter;
 import com.ekozah.chatmock.data.ChatMessage;
-import com.ekozah.chatmock.data.ChatRoom;
-import com.ekozah.chatmock.data.ChatUser;
 import com.ekozah.chatmock.interfaces.ChatRoomListener;
-import com.ekozah.chatmock.utils.NumericUtils;
-import com.ekozah.chatmock.utils.StringUtils;
-import com.ekozah.chatmock.utils.TimeUtils;
-
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
+/**
+ * this is the main activity where the chat list is diplayed
+ */
 public class ChatListActivity extends AppCompatActivity implements ChatRoomListener {
 
     RecyclerView rvChats;
@@ -73,5 +61,6 @@ public class ChatListActivity extends AppCompatActivity implements ChatRoomListe
 
     public void onMessage(ChatMessage message) {
         chatRoomsAdapter.notifyDataSetChanged();
+        rvChats.scrollToPosition(0);
     }
 }

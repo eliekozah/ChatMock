@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -11,9 +12,13 @@ import com.ekozah.chatmock.interfaces.ChatRoomListener;
 import com.ekozah.chatmock.adapters.ChatAdapter;
 import com.ekozah.chatmock.data.ChatMessage;
 
+/**
+ * this is the activity where a single chat is displayed
+ */
 public class ChatActivity extends AppCompatActivity implements ChatRoomListener{
 
     private TextView tvTitle;
+    private ImageView ivBack;
     private EditText etMessage;
     private long roomID;
     private ChatAdapter chatMessagesAdapter;
@@ -52,12 +57,20 @@ public class ChatActivity extends AppCompatActivity implements ChatRoomListener{
 
         tvTitle = findViewById(R.id.tv_toolbar_name);
         tvTitle.setText(ChatManager.getInstance().getChatRoomByID(roomID).getFriendName(ChatManager.getInstance().getMyID()));
+
+        ivBack = findViewById(R.id.iv_toolbar_back);
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChatActivity.super.onBackPressed();
+            }
+        });
     }
 
     public void sendMessage(View view) {
         String message = etMessage.getText().toString();
         if (message.length() > 0) {
-            ChatManager.getInstance().addChatMessageAndEchoTwice(roomID, ChatManager.getInstance().getMyID(), message);
+            ChatManager.getInstance().addChatMessageAndEchoTwice(roomID, message);
             etMessage.getText().clear();
         }
     }

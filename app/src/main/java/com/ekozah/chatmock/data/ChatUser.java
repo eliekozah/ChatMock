@@ -1,10 +1,10 @@
 package com.ekozah.chatmock.data;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import org.json.JSONObject;
-import java.util.Date;
 
+/**
+ * this class contains the data of a chat user
+ * first name, last name, id and thumb info
+ */
 public class ChatUser {
 
     long     id;

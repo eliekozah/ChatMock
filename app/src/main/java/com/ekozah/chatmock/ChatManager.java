@@ -4,11 +4,9 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Looper;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import com.ekozah.chatmock.comparators.ChatDateComparator;
 import com.ekozah.chatmock.data.ChatUser;
 import com.ekozah.chatmock.db.DbHelper;
-import com.ekozah.chatmock.interfaces.CallbackWithValue;
 import com.ekozah.chatmock.interfaces.ChatRoomListener;
 import com.ekozah.chatmock.data.ChatMessage;
 import com.ekozah.chatmock.data.ChatRoom;
@@ -21,10 +19,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Random;
 
+/**
+ * this class is the most important: it is where all the chat operations are handled, it
+ * is used as a singleton that extends Application class, getting the application context
+ * to create the chat database
+ */
 public class ChatManager extends Application {
 
     private static ChatManager instance;
-    private CallbackWithValue callback;
     private ChatRoomListener globalChatRoomListener;
     ArrayList<ChatRoom> data = new ArrayList<ChatRoom>();
     long myID;
@@ -42,6 +44,13 @@ public class ChatManager extends Application {
         init();
     }
 
+    /**
+     * this function creates the database helper class, checks if the are no chat database
+     * if no prior chat history, 100 new chats are generated randomly, then the list is
+     * sorted for display
+     * @param
+     * @return
+     */
     void init(){
         dbHelper = new DbHelper(this);
         if(getAllData() == false){
@@ -50,6 +59,12 @@ public class ChatManager extends Application {
         Collections.sort(ChatManager.getInstance().getChatRooms(), new ChatDateComparator());
     }
 
+    /**
+     * this function checks if a previous chat history exists,
+     * if yes all history from database is used to create chat list
+     * @param
+     * @return boolean telling whether history exists
+     */
     boolean getAllData () {
         ArrayList<ChatRoom> chatRooms = dbHelper.getChatRooms();
         if(chatRooms.size() == 0){
@@ -69,6 +84,11 @@ public class ChatManager extends Application {
         return true;
     }
 
+    /**
+     * this function creates 100 random chats rooms: random user names and messages
+     * @param
+     * @return
+     */
     private void createChatList() {
         ArrayList<ChatRoom> chatRooms = new ArrayList<>();
         StringUtils stringUtils = new StringUtils();
@@ -120,19 +140,31 @@ public class ChatManager extends Application {
         persistAllData();
     }
 
+    /**
+     * this function generates randomly 0, 1 or 2 messages
+     * @param roomID chat room id the messages should blong to
+     * @return list of messages
+     */
     private ArrayList<ChatMessage> generateZeroOrOneMessage(long roomID, long chatUserID){
 
         StringUtils stringUtils = new StringUtils();
         Random generator = new Random();
-        int numberOfMessages = generator.nextInt(2);
+        int numberOfMessages = generator.nextInt(3);
         ArrayList<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
-        if(numberOfMessages == 1){
+        for (int i = 0; i < numberOfMessages; ++i){
+            //timestamps of the messages range from now back to 3 days
             chatMessages.add(new ChatMessage(roomID, chatUserID, "Hello! " + stringUtils.getUniqueStringLongVersion(), TimeUtils.generateRandomTimeBetweenNowAndLastThreeDays()));
         }
+
 
         return chatMessages;
     }
 
+    /**
+     * this function saves all chat data to local databse
+     * @param
+     * @return
+     */
     void persistAllData(){
         for(int i = 0; i < ChatManager.getInstance().getChatRooms().size(); ++i){
 
@@ -150,59 +182,79 @@ public class ChatManager extends Application {
         }
     }
 
+    /**
+     * this function sets the chat list data
+     * @param data : list of chat rooms
+     * @return
+     */
     public void setData( ArrayList<ChatRoom> data) {
         this.data = data;
     }
 
-    public void addChatMessageAndEchoTwice(final long chatRoomID, final long userID, final String message){
-        publishChatMessage(chatRoomID, userID, message);
-        if(userID == myID){
-            //echo message
-            final Random rand = new Random();
-            int randDelay1 = rand.nextInt(1500) + 500;
-            new java.util.Timer().schedule(
-                    new java.util.TimerTask() {
-                        @Override
-                        public void run() {
-                            // your code here
+    /**
+     * this function gets the message written by the local user and echoes it twice
+     * after a randomized delay between 0.5 and 2 secs
+     * @param chatRoomID : chat room id the message should belong to,
+     * @param message message text
+     * @return
+     */
+    public void addChatMessageAndEchoTwice(final long chatRoomID, final String message){
+        publishChatMessage(chatRoomID, myID, message);
 
-                            new android.os.Handler(Looper.getMainLooper()).post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //Doing job here
-                                    publishChatMessage(chatRoomID, getChatRoomByID(chatRoomID).getFriendID(userID), message);
-
-                                    int randDelay2 = rand.nextInt(1500) + 500;
-                                    new java.util.Timer().schedule(
-                                            new java.util.TimerTask() {
-                                                @Override
-                                                public void run() {
-                                                    // your code here
-
-                                                    new android.os.Handler(Looper.getMainLooper()).post(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            //Doing job here
-                                                            publishChatMessage(chatRoomID, getChatRoomByID(chatRoomID).getFriendID(userID), message);
-                                                        }
-                                                    });
+        //echo message twice
+        final Random rand = new Random();
+        int randDelay1 = rand.nextInt(1500) + 500;
+        new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
 
 
-                                                }
-                                            },
-                                            randDelay2
-                                    );
-                                }
-                            });
+                        new android.os.Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                //echo once
+                                publishChatMessage(chatRoomID, getChatRoomByID(chatRoomID).getFriendID(myID), message);
+
+                                int randDelay2 = rand.nextInt(1500) + 500;
+                                new java.util.Timer().schedule(
+                                        new java.util.TimerTask() {
+                                            @Override
+                                            public void run() {
 
 
-                        }
-                    },
-                    randDelay1
-            );
-        }
+                                                new android.os.Handler(Looper.getMainLooper()).post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        //echo twice
+                                                        publishChatMessage(chatRoomID, getChatRoomByID(chatRoomID).getFriendID(myID), message);
+                                                    }
+                                                });
+
+
+                                            }
+                                        },
+                                        randDelay2
+                                );
+                            }
+                        });
+
+
+                    }
+                },
+                randDelay1
+        );
+
     }
 
+    /**
+     * this function publishes a chat message: to chat list, to the current open activity
+     * and to the database
+     * @param chatRoomID : chat room id the message should belong to,
+     * @param userID id of the user who is sending the message
+     * @param message message text
+     * @return
+     */
     public void publishChatMessage(long chatRoomID, long userID, String message){
         ChatMessage chatMessage = new ChatMessage(chatRoomID, userID, message, new Date());
         getChatRoomByID(chatRoomID).addMessage(chatMessage);
@@ -214,10 +266,15 @@ public class ChatManager extends Application {
         dbHelper.addChatMessage(chatMessage);
     }
 
-    public ChatRoom getChatRoomByID(long id) {
+    /**
+     * this function gets the chat room in the chat list
+     * @param chatRoomID : chat room id
+     * @return
+     */
+    public ChatRoom getChatRoomByID(long chatRoomID) {
         int j = 0;
         while (data.size() > j) {
-            if(data.get(j).getId() == id){
+            if(data.get(j).getId() == chatRoomID){
                 return data.get(j);
             }
             j++;
@@ -225,22 +282,45 @@ public class ChatManager extends Application {
         return null;
     }
 
+    /**
+     * this function sets local user id
+     * @param id : local user id
+     * @return
+     */
     public void setMyID(long id) {
         this.myID = id;
     }
 
+    /**
+     * this function gets local user id
+     * @return local user id
+     */
     public long getMyID() {
         return myID;
     }
 
+    /**
+     * this function gets the list of chat rooms
+     * @return list of chat rooms
+     */
     public ArrayList<ChatRoom> getChatRooms() {
         return data;
     }
 
+    /**
+     * this function sets the chat room listener (to Chat list activity of Chat Activity)
+     * @param listener the activity that should receive the one message event
+     * @return
+     */
     public void setGlobalChatRoomListener(ChatRoomListener listener) {
         globalChatRoomListener = listener;
     }
 
+    /**
+     * this function resets the new message count of as certain chat room to zero
+     * @param roomID chat room id
+     * @return
+     */
     public void resetNewMessagesCount(long roomID) {
         getChatRoomByID(roomID).setNewMessagesCount(0);
         dbHelper.updateChatRoom(getChatRoomByID(roomID));

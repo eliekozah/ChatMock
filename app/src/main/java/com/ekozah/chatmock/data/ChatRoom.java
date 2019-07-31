@@ -1,8 +1,12 @@
 package com.ekozah.chatmock.data;
 
 import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * this class contains the data of a chat room
+ * it's design can support multiple users in a chat room(group chat),
+ * not just 2 users
+ */
 public class ChatRoom {
     long id;
     ArrayList<ChatUser> chatUsers;
@@ -29,6 +33,13 @@ public class ChatRoom {
         this.id = id;
     }
 
+    /**
+     * the following three functions are not as generic as the other ones
+     * the get info of the chat friend (the first element in the chat user list
+     * that has an id that is different than the local user id
+     * they are implemented for the sake of this mock application
+     * they all take the same parameter which is the local user id
+     */
     public ChatUser getFriend(long myID) {
         int j = 0;
         while (chatUsers.size() > j) {
